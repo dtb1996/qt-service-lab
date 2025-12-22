@@ -42,9 +42,8 @@ jobs:
           -qmldir=../qml \
           -bundle-non-qt-libs \
           -appimage
-
     - name: Upload AppImage
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: QtServiceLab-AppImage
         path: build/release/bin/*.AppImage
