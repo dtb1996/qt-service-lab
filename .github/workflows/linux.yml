@@ -1,4 +1,4 @@
-name: Build Linux AppImage
+name: Build Linux Release AppImage
 
 on:
   push:
@@ -7,56 +7,68 @@ on:
   workflow_dispatch:
 
 jobs:
-  build-linux:
+  build:
     runs-on: ubuntu-22.04
+    env:
+      CI_BUILD: 1  # Skip qt_standard_project_setup in CMake
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-    - name: Install Qt 6
-      uses: jurplel/install-qt-action@v4
-      with:
-        version: "6.8.3"          # Pick any Qt6 release supported by the action
-        host: "linux"
-        target: "desktop"
-        install-deps: true
+      - name: Install system dependencies
+        run: |
+          sudo apt update
+          sudo apt install -y \
+            build-essential \
+            cmake \
+            wget \
+            python3-pip \
+            libgl1-mesa-dev \
+            libglu1-mesa-dev \
+            libxcb-xinerama0-dev \
+            libxkbcommon-dev \
+            libvulkan-dev \
+            unzip
 
-    - name: Verify Qt environment
-      run: |
-        qmake -v
-        which qmake
-        echo "Qt installed at $QT_ROOT_DIR"
+      - name: Install aqt for Qt
+        run: |
+          python3 -m pip install --upgrade pip
+          python3 -m pip install aqtinstall
 
-    - name: Install build tools
-      run: |
-        sudo apt update
-        sudo apt install -y cmake build-essential libgl1-mesa-dev libglu1-mesa-dev
+      - name: Install Qt 6.8.3
+        run: |
+          python3 -m aqt install-qt linux desktop 6.8.3 --outputdir $HOME/Qt --modules qtbase,qtdeclarative,qtquickcontrols2
 
-    - name: Build project
-      run: |
-        mkdir build
-        cd build
-        cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=release
-        cmake --build . --parallel
-        cmake --install . --prefix release
+      - name: Set Qt environment
+        run: |
+          echo "Adding Qt to PATH"
+          echo "$HOME/Qt/6.8.3/gcc_64/bin" >> $GITHUB_PATH
 
-    - name: Download linuxdeployqt
-      run: |
-        wget https://github.com/probonopd/linuxdeployqt/releases/download/continuous/linuxdeployqt-continuous-x86_64.AppImage
-        chmod +x linuxdeployqt-continuous-x86_64.AppImage
+      - name: Setup Build Directory
+        run: |
+          mkdir -p build
+          cd build
+          cmake ../ -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=release
+          cmake --build . --parallel
+          cmake --install . --prefix release
 
-    - name: Build AppImage
-      run: |
-        cd build/release/bin
-        ../../linuxdeployqt-continuous-x86_64.AppImage \
-          appQtServiceLab \
-          -qmldir=../qml \
-          -bundle-non-qt-libs \
-          -appimage
+      - name: Download linuxdeployqt
+        run: |
+          wget https://github.com/probonopd/linuxdeployqt/releases/download/continuous/linuxdeployqt-continuous-x86_64.AppImage
+          chmod +x linuxdeployqt-continuous-x86_64.AppImage
 
-    - name: Upload AppImage
-      uses: actions/upload-artifact@v4
-      with:
-        name: QtServiceLab-AppImage
-        path: build/release/bin/*.AppImage
+      - name: Build AppImage
+        run: |
+          cd build/release/bin
+          ../../../linuxdeployqt-continuous-x86_64.AppImage \
+            appQtServiceLab \
+            -qmldir=../qml \
+            -bundle-non-qt-libs \
+            -appimage
+
+      - name: Upload AppImage
+        uses: actions/upload-artifact@v4
+        with:
+          name: QtServiceLab-AppImage
+          path: build/release/bin/*.AppImage
