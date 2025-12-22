@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
 
 env:
-  CI_BUILD: 1  # Used in CMake to skip qt_standard_project_setup
+  CI_BUILD: 1  # Signals CMake to skip qt_standard_project_setup
 
 jobs:
   build:
@@ -43,13 +43,14 @@ jobs:
 
     - name: Download linuxdeployqt
       run: |
-        wget https://github.com/probonopd/linuxdeployqt/releases/download/continuous/linuxdeployqt-continuous-x86_64.AppImage
-        chmod +x linuxdeployqt-continuous-x86_64.AppImage
+        mkdir -p build/release
+        wget -O build/release/linuxdeployqt.AppImage https://github.com/probonopd/linuxdeployqt/releases/download/continuous/linuxdeployqt-continuous-x86_64.AppImage
+        chmod +x build/release/linuxdeployqt.AppImage
 
     - name: Build AppImage
       run: |
         cd build/release/bin
-        ../../linuxdeployqt-continuous-x86_64.AppImage \
+        ../linuxdeployqt.AppImage \
           appQtServiceLab \
           -qmldir=../qml \
           -bundle-non-qt-libs \
