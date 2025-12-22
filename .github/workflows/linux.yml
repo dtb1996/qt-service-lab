@@ -16,11 +16,18 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
 
-    - name: Install dependencies
+    - name: Install build dependencies
       run: |
         sudo apt update
-        sudo apt install -y build-essential cmake wget unzip qt6-base-dev qt6-declarative-dev
-
+        sudo apt install -y \
+          build-essential \
+          cmake \
+          wget \
+          unzip \
+          qt6-base-dev \
+          qt6-declarative-dev \
+          libgl1-mesa-dev \
+          libglu1-mesa-dev
 
     - name: Setup Build Directory
       run: |
