@@ -35,10 +35,9 @@ jobs:
 
     - name: Download and install Qt 6.10.8
       run: |
-        wget https://download.qt.io/official_releases/qt/6.10/6.10.8/qt-opensource-linux-x64-6.10.8.run
+        wget https://download.qt.io/official_releases/qt/6.10/6.10.8/single/qt-opensource-linux-x64-6.10.8.run
         chmod +x qt-opensource-linux-x64-6.10.8.run
         ./qt-opensource-linux-x64-6.10.8.run --script qt-install.qs
-        echo "$HOME/Qt/6.10.8/gcc_64/bin" >> $GITHUB_PATH
 
     - name: Verify qmake
       run: qmake -v
