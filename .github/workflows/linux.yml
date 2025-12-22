@@ -4,9 +4,7 @@ on:
   push:
     branches:
       - ci-test
-    # tags:
-    #   - 'v*'        # Trigger on version tags like v1.0.0
-  workflow_dispatch: # Allow manual runs
+  workflow_dispatch:
 
 jobs:
   build:
@@ -16,7 +14,7 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
 
-    - name: Install build dependencies
+    - name: Install system dependencies
       run: |
         sudo apt update
         sudo apt install -y \
@@ -25,23 +23,25 @@ jobs:
           wget \
           unzip \
           libgl1-mesa-dev \
-          libglu1-mesa-dev
+          libglu1-mesa-dev \
+          libxcb-xinerama0-dev \
+          libxkbcommon-dev \
+          libvulkan-dev
 
-    - name: Install Qt 6.10
+    - name: Download Qt 6.10.2
       run: |
-        wget https://download.qt.io/official_releases/qt/6.10/6.10.0/qt-opensource-linux-x64-6.10.0.run
-        chmod +x qt-opensource-linux-x64-6.10.0.run
-        # Use non-interactive installer script to install Qt
-        ./qt-opensource-linux-x64-6.10.0.run --platform minimal --script install-qt.qs
-        echo "Qt installed at $HOME/Qt/6.10.0/gcc_64"
-        echo "CMAKE_PREFIX_PATH=$HOME/Qt/6.10.0/gcc_64/lib/cmake" >> $GITHUB_ENV
+        wget https://download.qt.io/official_releases/qt/6.10/6.10.2/qt-opensource-linux-x64-6.10.2.run
+        chmod +x qt-opensource-linux-x64-6.10.2.run
+        # Minimal non-interactive install script for Qt
+        echo 'var installer = new Installer(); installer.selectComponent("qt.qt6.6102.gcc_64"); installer.performInstallation();' > install-qt.qs
+        ./qt-opensource-linux-x64-6.10.2.run --platform minimal --script install-qt.qs
+        echo "CMAKE_PREFIX_PATH=$HOME/Qt/6.10.2/gcc_64/lib/cmake" >> $GITHUB_ENV
 
     - name: Setup Build Directory
       run: |
         mkdir -p build
         cd build
-        cmake ../ -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=release \
-          -DCMAKE_PREFIX_PATH=$CMAKE_PREFIX_PATH
+        cmake ../ -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=release -DCMAKE_PREFIX_PATH=$CMAKE_PREFIX_PATH
         cmake --build . --parallel
         cmake --install . --prefix release
 
@@ -58,6 +58,7 @@ jobs:
           -qmldir=../qml \
           -bundle-non-qt-libs \
           -appimage
+
     - name: Upload AppImage
       uses: actions/upload-artifact@v4
       with:
