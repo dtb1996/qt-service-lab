@@ -6,7 +6,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 find_package(Qt6 REQUIRED COMPONENTS Quick)
 
-if(NOT DEFINED CI_BUILD)
+if(NOT DEFINED ENV{CI_BUILD})
     qt_standard_project_setup(REQUIRES 6.8)
 endif()
 
