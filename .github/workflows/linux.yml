@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
 
 env:
-  CI_BUILD: 1  # Signals CMake to skip qt_standard_project_setup
+  CI_BUILD: 1
 
 jobs:
   build:
@@ -25,17 +25,23 @@ jobs:
           cmake \
           wget \
           unzip \
-          qt6-base-dev \
-          qt6-declarative-dev \
-          qt6-qmake \
           libgl1-mesa-dev \
           libglu1-mesa-dev \
           libxcb-xinerama0-dev \
           libxkbcommon-dev \
-          libvulkan-dev
+          libvulkan-dev \
+          ca-certificates \
+          xz-utils
 
-    - name: Check qmake version
-      run: qmake -v          
+    - name: Download and install Qt 6.10.8
+      run: |
+        wget https://download.qt.io/official_releases/qt/6.10/6.10.8/qt-opensource-linux-x64-6.10.8.run
+        chmod +x qt-opensource-linux-x64-6.10.8.run
+        ./qt-opensource-linux-x64-6.10.8.run --script qt-install.qs
+        echo "$HOME/Qt/6.10.8/gcc_64/bin" >> $GITHUB_PATH
+
+    - name: Verify qmake
+      run: qmake -v
 
     - name: Setup Build Directory
       run: |
@@ -47,21 +53,4 @@ jobs:
 
     - name: Download linuxdeployqt
       run: |
-        mkdir -p build/release
-        wget -O build/release/linuxdeployqt.AppImage https://github.com/probonopd/linuxdeployqt/releases/download/continuous/linuxdeployqt-continuous-x86_64.AppImage
-        chmod +x build/release/linuxdeployqt.AppImage
-
-    - name: Build AppImage
-      run: |
-        cd build/release/bin
-        ../linuxdeployqt.AppImage \
-          appQtServiceLab \
-          -qmldir=../qml \
-          -bundle-non-qt-libs \
-          -appimage
-
-    - name: Upload AppImage
-      uses: actions/upload-artifact@v4
-      with:
-        name: QtServiceLab-AppImage
-        path: build/release/bin/*.AppImage
+        wget https://github.com/probonopd/linuxdeployqt/releases/download/continuous
