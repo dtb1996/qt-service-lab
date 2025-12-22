@@ -6,7 +6,9 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 find_package(Qt6 REQUIRED COMPONENTS Quick)
 
-qt_standard_project_setup(REQUIRES 6.8)
+if(NOT DEFINED CI_BUILD)
+    qt_standard_project_setup(REQUIRES 6.8)
+endif()
 
 qt_add_executable(appQtServiceLab
     src/main.cpp
