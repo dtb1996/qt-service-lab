@@ -20,6 +20,7 @@ qt_add_qml_module(appQtServiceLab
         qml/screens/FeedScreen.qml
         qml/components/LoadingOverlay.qml
         qml/components/ErrorBanner.qml
+        qml/components/AppButton.qml
     SOURCES
         src/app/AppState.h src/app/AppState.cpp
         src/app/AppController.h src/app/AppController.cpp

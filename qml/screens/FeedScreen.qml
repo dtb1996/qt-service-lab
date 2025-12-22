@@ -21,8 +21,9 @@ Item {
                 Layout.fillWidth: true
             }
 
-            Button {
+            AppButton {
                 text: qsTr("Reload")
+                enabled: !AppState.loading
                 onClicked: AppController.loadFeed()
             }
         }

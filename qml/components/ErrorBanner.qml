@@ -20,16 +20,16 @@ Rectangle {
         spacing: 12
 
         Label {
-            text: message
+            text: root.message
             color: "#ffffff"
             Layout.fillWidth: true
             wrapMode: Text.WordWrap
         }
 
-        Button {
+        AppButton {
             text: qsTr("Retry")
             Layout.alignment: Qt.AlignRight | Qt.AlignVCenter
-            onClicked: retryRequested()
+            onClicked: root.retryRequested()
         }
     }
 }
