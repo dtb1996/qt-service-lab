@@ -38,7 +38,7 @@ jobs:
 
       - name: Install Qt 6.8.3
         run: |
-          python3 -m aqt install-qt linux desktop 6.8.3 --outputdir $HOME/Qt --modules qtbase,qtdeclarative,qtquickcontrols2
+          python3 -m aqt install-qt linux desktop 6.8.3 --outputdir $HOME/Qt --modules qtbase qtdeclarative qtquickcontrols2
 
       - name: Set Qt environment
         run: |
