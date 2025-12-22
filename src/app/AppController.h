@@ -1,9 +1,9 @@
 #pragma once
 
 #include <QObject>
-#include "services/FakeApiService.h"
-#include "models/FeedModel.h"
-#include "app/AppState.h"
+#include "src/services/FakeApiService.h"
+#include "src/models/FeedModel.h"
+#include "src/app/AppState.h"
 
 class AppController : public QObject
 {

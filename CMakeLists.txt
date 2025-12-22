@@ -9,7 +9,7 @@ find_package(Qt6 REQUIRED COMPONENTS Quick)
 qt_standard_project_setup(REQUIRES 6.8)
 
 qt_add_executable(appQtServiceLab
-    main.cpp
+    src/main.cpp
 )
 
 qt_add_qml_module(appQtServiceLab
@@ -21,13 +21,13 @@ qt_add_qml_module(appQtServiceLab
         qml/components/LoadingOverlay.qml
         qml/components/ErrorBanner.qml
     SOURCES
-        app/AppState.h app/AppState.cpp
-        app/AppController.h app/AppController.cpp
-        services/FakeApiService.h services/FakeApiService.cpp
-        services/ServiceTypes.h
-        models/FeedModel.h models/FeedModel.cpp
-        models/FeedItem.h
-        utils/RandomDelay.h utils/RandomDelay.cpp
+        src/app/AppState.h src/app/AppState.cpp
+        src/app/AppController.h src/app/AppController.cpp
+        src/services/FakeApiService.h src/services/FakeApiService.cpp
+        src/services/ServiceTypes.h
+        src/models/FeedModel.h src/models/FeedModel.cpp
+        src/models/FeedItem.h
+        src/utils/RandomDelay.h src/utils/RandomDelay.cpp
 )
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.

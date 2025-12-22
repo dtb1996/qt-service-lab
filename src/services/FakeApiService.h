@@ -1,7 +1,7 @@
 #pragma once
 
 #include <QObject>
-#include "models/FeedItem.h"
+#include "src/models/FeedItem.h"
 
 class FakeApiService : public QObject
 {
