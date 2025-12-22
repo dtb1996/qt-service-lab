@@ -27,11 +27,15 @@ jobs:
           unzip \
           qt6-base-dev \
           qt6-declarative-dev \
+          qt6-qmake \
           libgl1-mesa-dev \
           libglu1-mesa-dev \
           libxcb-xinerama0-dev \
           libxkbcommon-dev \
           libvulkan-dev
+
+    - name: Check qmake version
+      run: qmake -v          
 
     - name: Setup Build Directory
       run: |
