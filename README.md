@@ -1,6 +1,6 @@
-# QtServiceLab
+# Qt Service Lab
 
-QtServiceLab is a Qt 6/QML application demonstrating a clean separation of
+Qt Service Lab is a Qt 6/QML application demonstrating a clean separation of
 concerns between UI, state management, data models, and service layers. The
 project simulates a backend API using C++ to drive the UI asynchronously,
 showcasing how to structure a real-world Qt application with QAbstractListModel,
